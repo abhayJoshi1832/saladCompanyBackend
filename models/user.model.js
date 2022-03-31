@@ -39,12 +39,7 @@ const userSchema = mongoose.Schema(
         }
       },
     },
-    walletMoney: {
-      type: Number,
-      require:true,
-      default: 500
-    },
-    address: {
+     address: {
       type: String,
       default: config.default_address,
     },

@@ -1,0 +1,19 @@
+id,name,serving_size,calories,total_fat,carbohydrate,fiber,sugars,protein
+5895,Paneer,100 g,72,0.3g,6.66 g,0.0 g,1.85 g,10.34
+850,Alfalfa sprouted,100 g,23,0.7g,2.10 g,1.9 g,0.20 g,3.99
+6849,Chickpeas sprouted cooked,100 g,164,2.6g,27.42 g,7.6 g,4.80 g,8.86
+5642,"Beans kidney, sprouted cooked",100 g,127,0.5g,22.80 g,7.4 g,0.32 g,8.67
+4751,"Tofu, raw",100 g,76,4.8g,1.87 g,0.3 g,0.62 g,8.08
+591,"Cheese, feta",100 g,264,21g,4.09 g,0.0 g,4.09 g,14.21
+2225895,Paneer -dummy,100 g,72,0.3g,6.66 g,0.0 g,1.85 g,10.34
+222850,Alfalfa sprouted- dummy,100 g,23,0.7g,2.10 g,1.9 g,0.20 g,3.99
+2226849,Chickpeas sprouted cooked -dummy,100 g,164,2.6g,27.42 g,7.6 g,4.80 g,8.86
+2225642,"Beans kidney, sprouted cooked -dummy",100 g,127,0.5g,22.80 g,7.4 g,0.32 g,8.67
+2224751,"Tofu, raw- dummy",100 g,76,4.8g,1.87 g,0.3 g,0.62 g,8.08
+222591,"Cheese, feta- dummy",100 g,264,21g,4.09 g,0.0 g,4.09 g,14.21
+2225895333,Paneer -dummy3,100 g,72,0.3g,6.66 g,0.0 g,1.85 g,10.34
+222850333,Alfalfa sprouted- dummy3,100 g,23,0.7g,2.10 g,1.9 g,0.20 g,3.99
+2226849333,Chickpeas sprouted cooked -dummy3,100 g,164,2.6g,27.42 g,7.6 g,4.80 g,8.86
+2225642333,"Beans kidney, sprouted cooked -dummy3",100 g,127,0.5g,22.80 g,7.4 g,0.32 g,8.67
+2224751333,"Tofu, raw- dummy3",100 g,76,4.8g,1.87 g,0.3 g,0.62 g,8.08
+222591333,"Cheese, feta- dummy3",100 g,264,21g,4.09 g,0.0 g,4.09 g,14.21
