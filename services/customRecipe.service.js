@@ -1,5 +1,10 @@
 const httpStatus = require("http-status");
-const { CustomRecipe,Ingredient  } = require("../models");
+const {
+  CustomRecipe
+} = require("../models/customRecipe.model");
+const {
+  Ingredient
+} = require("../models/ingredient.model");
 const ApiError = require("../utils/ApiError");
 const config = require("../config/config");
 const ingredientService = require("./ingredient.service")
@@ -17,16 +22,34 @@ const ingredientService = require("./ingredient.service")
  * @returns {Promise<Cart>}
  * @throws {ApiError}
  */
-const createUserCustomRecipe = async (user=null) => {
-  let email;
-  user? email = user.email : email = "";  
-  const userRecipe = new CustomRecipe({email});
-  await userRecipe.save();
-  if (!userRecipe){
-    throw new ApiError(500,"could not create recipe in customRecipeService" );
+const createUserCustomRecipe = async (user = null) => {
+
+  try {
+    let email;
+    user ? email = user.email : email = "";
+    const userRecipe = await CustomRecipe.create({
+      email: email
+    });
+    if (!userRecipe) {
+      throw new ApiError(500, "could not create recipe in customRecipeService");
+    }
+    return userRecipe;
+
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    console.log(error);
+    throw new ApiError(500,"Error in DB service");
+
   }
-  return userRecipe;  
+
+
 };
+
+const getRecipe= async(recipeId) => {
+  const recipe = await CustomRecipe.findById(recipeId);
+  return recipe;
+}
+
 
 /**
  * Adds a new product to cart
@@ -54,35 +77,45 @@ const createUserCustomRecipe = async (user=null) => {
  */
 const addIngredient = async (recipeId, ingredient, quantity) => {
 
+
+
   try {
-    
+
     const userRecipe = await CustomRecipe.findById(recipeId);
     const userIngredient = await ingredientService.getIngredientById(ingredient);
+
+    console.log("inside user service-- ");
+
+    console.log(userRecipe, userIngredient);
 
     //console.log("userProduct: ", userProduct);
 
     //console.log('userCart: - ', userCart);
 
-    if (!userIngredient) throw new ApiError(400,"Ingredient doesn't exist in database");
+    if (!userIngredient) throw new ApiError(400, "Ingredient doesn't exist in database");
 
-    if (userRecipe.recipeItems.some((elem) => elem.ingredient.id === ingredient)){
-      throw new ApiError(400,"Product already in CustomRecipe. Use the cart sidebar to update or remove product from cart");
+    if (userRecipe.recipeItems.some((elem) => elem["ingredient"]['id'] === ingredient)) {
+      throw new ApiError(400, "Product already in CustomRecipe. Use updateIngredient API (called using PUT '../v1/recipe' method)-  recipe sidebar to update or remove item from recipe");
     }
 
-    userRecipe.recipeItems.push({ingredient, weight: quantity});
+    userRecipe.recipeItems.push({
+      ingredient: userIngredient,
+      weight: quantity
+    });
     await userRecipe.save();
 
-     return userRecipe;    
-    
+    return userRecipe;
+
   } catch (error) {
 
     //console.log(error);
 
-    if(error instanceof ApiError) throw error;    
-    throw new ApiError(500,"Internal database error")
+    if (error instanceof ApiError) throw error;
+    console.log('error in service: ', error);
+    throw new ApiError(500, "Internal database error")
   }
 
-  
+
 
 
 };
@@ -111,58 +144,40 @@ const addIngredient = async (recipeId, ingredient, quantity) => {
  * @returns {Promise<Cart>
  * @throws {ApiError}
  */
-const updateIngredient = async (userRecipe, ingredient, quantity) => {
+const updateIngredient = async (recipeId, ingredient, quantity) => {
 
   //console.log("user, productId, quantity: ", user, productId, quantity);
 
   try {
-
+    const userRecipe = await CustomRecipe.findById(recipeId);
     const userIngredient = await ingredientService.getIngredientById(ingredient);
-    
-
-    if (!userIngredient) throw new ApiError(400,"Product doesn't exist in database");
-    if (!userRecipe) throw new ApiError(400,"User does not have a CustomeRecipe. Use POST to create cart and add a product");
-    
-    
-
-    const items = userRecipe.recipeItems;
-    //console.log('usercart: ', cartArr );
-    console.log('......................................................................................... ');
 
 
-    //console.log("isProduct- ",isProduct);
-    
-    if(!userRecipe.recipeItems.some((elem) => elem.ingredient.id === ingredient)) throw new ApiError(400,"Product not in cart");
+    if (!userIngredient) throw new ApiError(400, "Product doesn't exist in database");
+    if (!userRecipe) throw new ApiError(400, "User does not have a CustomeRecipe. Use POST to create cart and add a product");
 
-    // if (quantity > 0){
-    // }
-    // // working-
-    // await CustomeRecipe.updateOne({'cartItems.product': userProduct},
-    // {$set: {'cartItems.$.quantity': quantity}});
-    //console.log("user cart 158: ",userCart.cartItems, userProduct);
+
+
+    if (!(userRecipe.recipeItems.some((elem) => elem.ingredient.id === ingredient))) throw new ApiError(400, "Item not in recipe, use POST method");   // if (quantity > 0){
+   
 
     const ind = userRecipe.recipeItems.findIndex(obj => obj.ingredient.id === ingredient);
-
     if (quantity > 0) userRecipe.recipeItems[ind].weight = quantity;
-    else userRecipe.recipeItems.splice(ind,1);
+    else userRecipe.recipeItems.splice(ind, 1);
 
     await userRecipe.save()
-    return userRecipe;     
-  
-  }  
-  catch (error) {
-    //console.log(error);
-    if(error instanceof ApiError) throw error;    
-    throw new ApiError(500,"Internal error in the database" );
-    
-    
+    return userRecipe;
+
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(500, "Internal error in the database");
   }
 };
 
 // const checkout = async (user) => {
 
 //   try {
-    
+
 //   //test1
 //   const userCart = await CustomeRecipe.findOne({email: user.email});
 //   if(!userCart) throw new ApiError(404, "User does not have a cart");
@@ -194,7 +209,7 @@ const updateIngredient = async (userRecipe, ingredient, quantity) => {
 //   ;
 //   //make cartitems 0
 //   //
-    
+
 //   } catch (error) {
 
 //     if (error instanceof ApiError){
@@ -215,5 +230,6 @@ const updateIngredient = async (userRecipe, ingredient, quantity) => {
 module.exports = {
   addIngredient,
   updateIngredient,
-  createUserCustomRecipe  
+  createUserCustomRecipe,
+  getRecipe
 };

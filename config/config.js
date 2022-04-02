@@ -6,7 +6,9 @@ const DEFAULT_WALLET_MONEY = 500;
 const DEFAULT_PAYMENT_OPTION = "PAYMENT_OPTION_DEFAULT";
 const DEFAULT_ADDRESSS = "ADDRESS_NOT_SET";
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+//console.log('dirname:: ',__dirname, 'path:: ', path.join(__dirname, '../.env') );
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const envVarsSchema = Joi.object()
   .keys({

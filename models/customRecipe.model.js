@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {ingredientSchema} = require('./ingredient.model');
-const config = require("../../config/config")
+const config = require("../config/config")
 
 // TODO: CRIO_TASK_MODULE_CART - Complete cartSchema, a Mongoose schema for "carts" collection
 const recipeSchema = new mongoose.Schema({
@@ -9,7 +9,7 @@ const recipeSchema = new mongoose.Schema({
     default: ""
   },
   recipeItems: [{
-    ingredient: ingredientSchema,
+    ingredient: {type: ingredientSchema},
     weight: {
       type: Number,
       required: true
@@ -30,22 +30,23 @@ const recipeSchema = new mongoose.Schema({
 
 }, {
   timestamps: false,
-  collection: customRecipes
+  collection: "customrecipes"
 });
 
-recipeSchema.pre('save', function(doc){  
+recipeSchema.pre('save', function(next){  
   // const macros = array1.reduce(
   //   (previousValue, currentValue) =>{
   //     total = {}
 
   //     previousValue.protein
-  //     previousValue + currentValue}
-    
-    
-    
+  //     previousValue + currentValue}    
   //   ,    
   //   {protein: 0, fats: 0, carbohydrates:0, calories:0, fibre:0}
   // );
+
+  const doc = this;
+
+  if((!doc.recipeItems)) next();
 
   const macros = doc.recipeItems.reduce((prev, current) => {
     for (let k in prev) {
@@ -54,17 +55,14 @@ recipeSchema.pre('save', function(doc){
     }
     return prev;
   }, {protein: 0, fats: 0, carbohydrates:0, calories:0, fibre:0});
-
-  doc.macros = macros
-
-  return
-
+  doc.macros = macros;
+  next();
 })
 
 
 /**
  * @typedef Cart
  */
-const customRecipe = mongoose.model('Custome Recipe', recipeSchema);
+const CustomRecipe = mongoose.model('customrecipe', recipeSchema);
 
-module.exports.Cart = Cart;
+module.exports.CustomRecipe = CustomRecipe;

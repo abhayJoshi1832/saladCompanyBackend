@@ -8,7 +8,7 @@ const ingredientSchema = mongoose.Schema(
       trim: true,
     },
     category: {
-      type: number,
+      type: Number,
       required: true,
     },
     id: {
@@ -23,7 +23,7 @@ const ingredientSchema = mongoose.Schema(
       type: String,
       required:true,
     },
-    fibre: {
+    fiber: {
       type: String,
       required:true,
     },
@@ -31,21 +31,21 @@ const ingredientSchema = mongoose.Schema(
       type: String,
       required:true,
     },
-    carbohydrates: {
+    carbohydrate: {
       type: String,
       required:true,
     },
   },
   {
     timestamps: false,
-    collection: ingredients
+    collection: "ingredients"
   }
 );
 
 /**
  * @typedef Product
  */
-const Ingredient = mongoose.model("Ingredient", productSchema);
+const Ingredient = mongoose.model("Ingredient", ingredientSchema);
 
 module.exports.Ingredient = Ingredient;
 module.exports.ingredientSchema = ingredientSchema;

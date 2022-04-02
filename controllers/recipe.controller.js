@@ -38,10 +38,18 @@ const { all } = require("../app");
 const getAllItems = catchAsync(async(req,res)=>{
   const allItem = await ingredientService.getIngredients();
   res.json(allItem)
+});
+
+const getRecipe = catchAsync(async(req,res)=>{
+  console.log("recipeID: ", req.body.recipeId)
+  const recipe = await recipeService.getRecipe(req.body.recipeId);
+  res.json(recipe);
 })
 
 const createRecipe = catchAsync(async (req, res) => {
+  console.log('create recipe controller called');
   const recipe = await recipeService.createUserCustomRecipe();
+  console.log('created recipe in controller: ', recipe);
   res.json(recipe);
 });
 
@@ -51,6 +59,7 @@ const createRecipe = catchAsync(async (req, res) => {
  *
  */
 const addItemToRecipe = catchAsync(async (req, res) => {
+  //console.log('req body',req.body);
   const recipe = await recipeService.addIngredient(
     req.body.recipeId,
     req.body.ingredientId,
@@ -115,5 +124,6 @@ module.exports = {
   getAllItems,
   createRecipe,
   addItemToRecipe,
-  updateItemInRecipe
+  updateItemInRecipe,
+  getRecipe
 };

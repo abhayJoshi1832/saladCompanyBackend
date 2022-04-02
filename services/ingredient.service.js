@@ -1,4 +1,4 @@
-const { Ingredient } = require("../models");
+const { Ingredient } = require("../models/ingredient.model");
 
 /**
  * Get Product by id
@@ -6,7 +6,7 @@ const { Ingredient } = require("../models");
  * @returns {Promise<User>}
  */
 const getIngredientById = async (id) => {
-  return Ingredient.findOne({id: id});
+  return await Ingredient.findOne({id: id});
 };
 
 /**
@@ -14,7 +14,10 @@ const getIngredientById = async (id) => {
  * @returns {Promise<List<Products>>}
  */
 const getIngredients = async () => {
-  return Ingredient.find({});
+  //console.log("ingedients service", Ingredient);
+  const result = await Ingredient.find({});
+  
+  return result;
 };
 
 module.exports = {
