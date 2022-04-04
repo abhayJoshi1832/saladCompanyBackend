@@ -35,27 +35,15 @@ const recipeSchema = new mongoose.Schema({
 
 recipeSchema.pre('save', function(next){  
   
-  // const macrosTotal = this.recipeItems.reduce(
-  //   (previousValue, currentValue) =>{
-  //     total = {}
-
-  //     previousValue.protein
-  //     previousValue + currentValue}    
-  //   ,    
-  //   {protein: 0, fats: 0, carbohydrate:0, calories:0, fiber:0}
-  // );
-
   const doc = this;
 
   //console.log("Recipe Items::: ----",doc)
-
   if((!doc.recipeItems)) next();
-
 
   const macrosTotal = doc.recipeItems.reduce((prev, current) => {
 
-    console.log('current: ', current);
-    console.log('prev at beginning: ', prev);
+    //console.log('current: ', current);
+    //.log('prev at beginning: ', prev);
     
 
     for (let k in prev) {
@@ -63,14 +51,13 @@ recipeSchema.pre('save', function(next){
         
         prev[k] = Number((Number(prev[k]) + Number(eachMacro))).toFixed(2);
         prev[k] = Number(prev[k]);
-        console.log("eachMacro: ",eachMacro, k, "prev[k] : ", prev[k]);
       
     }
-    console.log("line 68: prev at end",prev);
+    //console.log("line 68: prev at end",prev);
     return prev;
   }, {protein: 0.0, total_fat: 0.0, carbohydrate:0.0, calories:0.0, fiber:0.0});
 
-  console.log(macrosTotal);
+  //console.log(macrosTotal);
 
   doc.macros = macrosTotal;
   next();
