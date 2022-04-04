@@ -20,11 +20,11 @@ const recipeSchema = new mongoose.Schema({
     default: ""
   },
   macros:{
-    protein: {type: Number, default: 0},
-    fats: {type: Number, default: 0},
-    carbohydrates: {type: Number, default: 0},
-    calories: {type: Number, default: 0},
-    fibre: {type: Number, default: 0}
+    protein: {type: Number, default: 0.0},
+    total_fat: {type: Number, default: 0.0},
+    carbohydrate: {type: Number, default: 0.0},
+    calories: {type: Number, default: 0.0},
+    fiber: {type: Number, default: 0.0}
   }
 
 
@@ -34,28 +34,45 @@ const recipeSchema = new mongoose.Schema({
 });
 
 recipeSchema.pre('save', function(next){  
-  // const macros = array1.reduce(
+  
+  // const macrosTotal = this.recipeItems.reduce(
   //   (previousValue, currentValue) =>{
   //     total = {}
 
   //     previousValue.protein
   //     previousValue + currentValue}    
   //   ,    
-  //   {protein: 0, fats: 0, carbohydrates:0, calories:0, fibre:0}
+  //   {protein: 0, fats: 0, carbohydrate:0, calories:0, fiber:0}
   // );
 
   const doc = this;
 
+  //console.log("Recipe Items::: ----",doc)
+
   if((!doc.recipeItems)) next();
 
-  const macros = doc.recipeItems.reduce((prev, current) => {
+
+  const macrosTotal = doc.recipeItems.reduce((prev, current) => {
+
+    console.log('current: ', current);
+    console.log('prev at beginning: ', prev);
+    
+
     for (let k in prev) {
-      if (current.ingredient.hasOwnProperty(k))
-        prev[k] += parseFloat(current.ingredient[k]*current.weight/100);
+        const eachMacro = Number(parseFloat(current.ingredient[k])*(current.weight/100)).toFixed(2);
+        
+        prev[k] = Number((Number(prev[k]) + Number(eachMacro))).toFixed(2);
+        prev[k] = Number(prev[k]);
+        console.log("eachMacro: ",eachMacro, k, "prev[k] : ", prev[k]);
+      
     }
+    console.log("line 68: prev at end",prev);
     return prev;
-  }, {protein: 0, fats: 0, carbohydrates:0, calories:0, fibre:0});
-  doc.macros = macros;
+  }, {protein: 0.0, total_fat: 0.0, carbohydrate:0.0, calories:0.0, fiber:0.0});
+
+  console.log(macrosTotal);
+
+  doc.macros = macrosTotal;
   next();
 })
 

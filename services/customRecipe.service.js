@@ -76,21 +76,10 @@ const getRecipe= async(recipeId) => {
  * @throws {ApiError}
  */
 const addIngredient = async (recipeId, ingredient, quantity) => {
-
-
-
   try {
 
     const userRecipe = await CustomRecipe.findById(recipeId);
     const userIngredient = await ingredientService.getIngredientById(ingredient);
-
-    console.log("inside user service-- ");
-
-    console.log(userRecipe, userIngredient);
-
-    //console.log("userProduct: ", userProduct);
-
-    //console.log('userCart: - ', userCart);
 
     if (!userIngredient) throw new ApiError(400, "Ingredient doesn't exist in database");
 
@@ -156,8 +145,6 @@ const updateIngredient = async (recipeId, ingredient, quantity) => {
     if (!userIngredient) throw new ApiError(400, "Product doesn't exist in database");
     if (!userRecipe) throw new ApiError(400, "User does not have a CustomeRecipe. Use POST to create cart and add a product");
 
-
-
     if (!(userRecipe.recipeItems.some((elem) => elem.ingredient.id === ingredient))) throw new ApiError(400, "Item not in recipe, use POST method");   // if (quantity > 0){
    
 
@@ -170,6 +157,7 @@ const updateIngredient = async (recipeId, ingredient, quantity) => {
 
   } catch (error) {
     if (error instanceof ApiError) throw error;
+    console.log('error in service: ', error);
     throw new ApiError(500, "Internal error in the database");
   }
 };
