@@ -36,8 +36,6 @@ const recipeSchema = new mongoose.Schema({
 recipeSchema.pre('save', function(next){  
   
   const doc = this;
-
-  //console.log("Recipe Items::: ----",doc)
   if((!doc.recipeItems)) next();
 
   const macrosTotal = doc.recipeItems.reduce((prev, current) => {

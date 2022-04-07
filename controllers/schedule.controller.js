@@ -6,35 +6,7 @@ const {User} = require("../models/user.model");
 const { getIngredients } = require("../services/ingredient.service");
 const { all } = require("../app");
 
-/**
- * Fetch the cart details
- *
- * Example response:
- * HTTP 200 OK
- * {
- *  "_id": "5f82eebd2b11f6979231653f",
- *  "email": "crio-user@gmail.com",
- *  "cartItems": [
- *      {
- *          "_id": "5f8feede75b0cc037b1bce9d",
- *          "product": {
- *              "_id": "5f71c1ca04c69a5874e9fd45",
- *              "name": "ball",
- *              "category": "Sports",
- *              "rating": 5,
- *              "cost": 20,
- *              "image": "google.com",
- *              "__v": 0
- *          },
- *          "quantity": 2
- *      }
- *  ],
- *  "paymentOption": "PAYMENT_OPTION_DEFAULT",
- *  "__v": 33
- * }
- * 
- *
- */
+
 const getAllItems = catchAsync(async(req,res)=>{
   const allItem = await ingredientService.getIngredients();
   res.json(allItem)
