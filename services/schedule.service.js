@@ -7,7 +7,8 @@ const {
 } = require("../models/ingredient.model");
 const ApiError = require("../utils/ApiError");
 const config = require("../config/config");
-const ingredientService = require("./ingredient.service")
+const ingredientService = require("./ingredient.service");
+const orderService = require("./order.service");
 
 
 
@@ -16,9 +17,40 @@ const ingredientService = require("./ingredient.service")
 // Reject if a user Already has existing schedule
 // Output- months schedule object with date & day wise salad name, macros, delivery address 1st line, time
 
-const createSchedule = async (userEmail, weeklySchedule, startDate) =>{
-  
 
+/**
+ * 
+ * @param {string} userEmail 
+ * @param {*} weeklySchedule 
+ * @param {Date} startDate 
+ */
+const createSchedule = async (userEmail, weeklySchedule, startDate) =>{
+
+  try {
+    
+
+    let orderDate = startDate;
+    let i= 0;
+    while(i< 22){
+
+      if (orderDate.getDay() in weeklySchedule){
+        let dayDetails = weeklySchedule[orderDate.getDay()];
+        let deliveryTime = new Date(orderDate);
+        deliveryTime.setHours(dayDetails.hours, 0);
+      
+      
+        await orderService.createOrder(userEmail, dayDetails.recipeId, deliveryTime, dayDetails.address);
+
+      };
+      
+      orderDate.setDate(orderDate.getDate()+1);
+    }
+
+  
+} catch (error) {
+  console.log(error);
+  throw new ApiError(500, "Error in create schedule service (line 52)");    
+}
 };
 
 const getSchedule = async(userEmail) =>{
