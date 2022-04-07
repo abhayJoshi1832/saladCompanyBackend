@@ -5,44 +5,67 @@ const ApiError = require("../utils/ApiError");
 const {User} = require("../models/user.model");
 const { getIngredients } = require("../services/ingredient.service");
 const { all } = require("../app");
+const scheduleService = require("../services/schedule.service");
+const { createUserCustomRecipe } = require("../services/customRecipe.service");
+const { crossOriginResourcePolicy } = require("helmet");
 
 
-const getAllItems = catchAsync(async(req,res)=>{
-  const allItem = await ingredientService.getIngredients();
-  res.json(allItem)
+const createSchedule = catchAsync(async (req,res) => {
+
+  //console.log("create schedule received with: ", req.user.email, req.body.weeklySchedule, req.body.startDate);
+  await scheduleService.createSchedule(req.user.email, req.body.weeklySchedule, req.body.startDate);
+  res.json({message: "success"});
+
 });
 
+const getSchedule = catchAsync(async (req,res) =>{
+  const responseArr = await scheduleService.getSchedule(req.user.email);
+  res.json({orders: responseArr});
 
-// TO DO- change getrecipe to get recipes by ID or get recipes by email ; based on query
-const getRecipe = catchAsync(async(req,res)=>{
-  console.log('request ID in query: --', req.query )
-  console.log("recipeID: ", req.body.recipeId)
-  const recipe = await recipeService.getRecipe(req.body.recipeId);
-  res.json(recipe);
+});
+
+const deleteSchedule = catchAsync(async(req,res) =>{
+  const response = await scheduleService.deleteSchedule(req.user.email);
+  res.json({message: response});
 })
 
-const createRecipe = catchAsync(async (req, res) => {
-  console.log('create recipe controller called');
-  const recipe = await recipeService.createUserCustomRecipe();
-  console.log('created recipe in controller: ', recipe);
-  res.json(recipe);
-});
+
+// const getAllItems = catchAsync(async(req,res)=>{
+//   const allItem = await ingredientService.getIngredients();
+//   res.json(allItem)
+// });
+
+
+// // TO DO- change getrecipe to get recipes by ID or get recipes by email ; based on query
+// const getRecipe = catchAsync(async(req,res)=>{
+//   console.log('request ID in query: --', req.query )
+//   console.log("recipeID: ", req.body.recipeId)
+//   const recipe = await recipeService.getRecipe(req.body.recipeId);
+//   res.json(recipe);
+// })
+
+// const createRecipe = catchAsync(async (req, res) => {
+//   console.log('create recipe controller called');
+//   const recipe = await recipeService.createUserCustomRecipe();
+//   console.log('created recipe in controller: ', recipe);
+//   res.json(recipe);
+// });
 
 /**
  * Add a product to cart
  *
  *
  */
-const addItemToRecipe = catchAsync(async (req, res) => {
-  //console.log('req body',req.body);
-  const recipe = await recipeService.addIngredient(
-    req.body.recipeId,
-    req.body.ingredientId,
-    req.body.weight
-  );
+// const addItemToRecipe = catchAsync(async (req, res) => {
+//   //console.log('req body',req.body);
+//   const recipe = await recipeService.addIngredient(
+//     req.body.recipeId,
+//     req.body.ingredientId,
+//     req.body.weight
+//   );
 
-  res.status(httpStatus.CREATED).json(recipe);
-});
+//   res.status(httpStatus.CREATED).json(recipe);
+// });
 
 // TODO: CRIO_TASK_MODULE_CART - Implement updateProductInCart()
 /**
@@ -60,18 +83,18 @@ const addItemToRecipe = catchAsync(async (req, res) => {
  * 
  *
  */
-const updateItemInRecipe = catchAsync(async (req, res) => {
-  const recipe = await recipeService.updateIngredient(
-    req.body.recipeId,
-    req.body.ingredientId,
-    req.body.weight
-  );
+// const updateItemInRecipe = catchAsync(async (req, res) => {
+//   const recipe = await recipeService.updateIngredient(
+//     req.body.recipeId,
+//     req.body.ingredientId,
+//     req.body.weight
+//   );
 
-  if (req.body.weight) res.status(200).send(recipe);
-  else res.status(204).json(recipe);
+//   if (req.body.weight) res.status(200).send(recipe);
+//   else res.status(204).json(recipe);
 
   
-});
+// });
 
 
 /**
@@ -96,9 +119,5 @@ const updateItemInRecipe = catchAsync(async (req, res) => {
 // });
 
 module.exports = {
-  getAllItems,
-  createRecipe,
-  addItemToRecipe,
-  updateItemInRecipe,
-  getRecipe
+  createSchedule,getSchedule,deleteSchedule
 };

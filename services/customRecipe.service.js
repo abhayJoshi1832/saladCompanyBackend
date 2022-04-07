@@ -28,7 +28,8 @@ const createUserCustomRecipe = async (user = null) => {
     let email;
     user ? email = user.email : email = "";
     const userRecipe = await CustomRecipe.create({
-      email: email
+      userEmail: email,
+      recipeName: user.name + "'s recipe "
     });
     if (!userRecipe) {
       throw new ApiError(500, "could not create recipe in customRecipeService");
@@ -75,10 +76,14 @@ const getRecipe= async(recipeId) => {
  * @returns {Promise<Cart>}
  * @throws {ApiError}
  */
-const addIngredient = async (recipeId, ingredient, quantity) => {
+const addIngredient = async (recipeId, ingredient, quantity, userEmail) => {
   try {
 
     const userRecipe = await CustomRecipe.findById(recipeId);
+
+    //console.log("user email: ", userEmail, "user Email in DB: ", userRecipe.userEmail);
+
+    if (userEmail !== userRecipe.userEmail) throw new ApiError(400, "user email did not match for recipe, in user service");
     const userIngredient = await ingredientService.getIngredientById(ingredient);
 
     if (!userIngredient) throw new ApiError(400, "Ingredient doesn't exist in database");
@@ -133,12 +138,24 @@ const addIngredient = async (recipeId, ingredient, quantity) => {
  * @returns {Promise<Cart>
  * @throws {ApiError}
  */
-const updateIngredient = async (recipeId, ingredient, quantity) => {
+const updateIngredient = async (recipeId, ingredient, quantity, userEmail) => {
 
   //console.log("user, productId, quantity: ", user, productId, quantity);
 
   try {
+
     const userRecipe = await CustomRecipe.findById(recipeId);
+    
+    if(!userRecipe) throw new ApiError(500, "could not find recipe");
+
+
+    console.log("userREcipe:: ", userRecipe);
+    console.log("user email: ", userEmail, "user Email in DB: ", userRecipe.userEmail);
+
+    if (userEmail !== userRecipe.userEmail) throw new ApiError(400, "user email did not match for recipe, in user service");
+    
+
+
     const userIngredient = await ingredientService.getIngredientById(ingredient);
 
 

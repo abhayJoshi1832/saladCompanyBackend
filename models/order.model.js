@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
 
     recipeId: {type:String},
 
-    deliverytime: {type: Date},
+    deliveryTime: {type: Date},
 
     orderStatus: {
         type: String,
@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
         default: "Upcoming"         
     },
 
-    deliveryAdress: {type: String, required: true}
+    deliveryAddress: {type: String, required: true}
 
 },
 {

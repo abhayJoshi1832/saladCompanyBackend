@@ -1,15 +1,16 @@
 const express = require("express");
 const validate = require("../../middlewares/validate");
 const auth = require("../../middlewares/auth");
-const { recipeController } = require("../../controllers");
+const scheduleController = require("../../controllers/schedule.controller");
+
 
 const router = express.Router();
 
-router.post("/week", );
+router.post("/week",auth, scheduleController.createSchedule);
 
-router.get("/month", );
+router.get("/month", auth, scheduleController.getSchedule);
 
-router.delete("/month", );
+router.delete("/month", auth, scheduleController.deleteSchedule );
 
 
 

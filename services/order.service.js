@@ -13,6 +13,8 @@ class OrderMethodsClass
 
     createOrder = async (userEmail, recipeId, deliveryTime, address) =>{
 
+        console.log("inside order method: ",userEmail, recipeId, deliveryTime, address);
+
         try {
         const order = await OrderModel.create({
             userEmail: userEmail,
@@ -20,6 +22,7 @@ class OrderMethodsClass
             deliveryTime: deliveryTime,
             deliveryAddress: address
         });
+        return order;
 
     } catch (error) {
         console.log(error);
@@ -30,8 +33,30 @@ class OrderMethodsClass
 
     getUpcomingOrdersByUser = async(userEmail) =>{
 
+        //console.log("userEmail in order service", userEmail);
+        try {
+            const orders = await OrderModel.find(
+                {
+                "userEmail": userEmail,                
+                "orderStatus": "Upcoming"
+                }
+            );
+
+            //console.log("order inside order service",orders);
+            return orders
+        } catch (error) {
+            console.log("error in getting order", error);
+            throw new ApiError(500, "Error in orderService, create getUpcoming fn");
+            
+        }
+
     };
 
+    deleteByEmail = async(email) =>
+    {
+        const res = await OrderModel.deleteMany({userEmail: email, orderStatus: "Upcoming" });
+        return res;
+    }
     getCurrentOrdersByUser = async(userEmail) =>{
 
     };
@@ -47,6 +72,8 @@ class OrderMethodsClass
     deleteOrderById = async(orderId) =>{
 
     };
+
+  
 
 };
 

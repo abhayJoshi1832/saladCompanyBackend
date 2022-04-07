@@ -43,15 +43,17 @@ const getAllItems = catchAsync(async(req,res)=>{
 
 // TO DO- change getrecipe to get recipes by ID or get recipes by email ; based on query
 const getRecipe = catchAsync(async(req,res)=>{
-  console.log('request ID in query: --', req.query )
-  console.log("recipeID: ", req.body.recipeId)
+  //console.log('request ID in query: --', req.query )
+  //console.log("recipeID: ", req.body.recipeId)
   const recipe = await recipeService.getRecipe(req.body.recipeId);
+  
+  if (recipe.userEmail !== req.user.email) throw new ApiError('Email validation failed in token, recipe controller');
   res.json(recipe);
 })
 
 const createRecipe = catchAsync(async (req, res) => {
-  console.log('create recipe controller called');
-  const recipe = await recipeService.createUserCustomRecipe();
+  console.log('create recipe controller called', req.user);
+  const recipe = await recipeService.createUserCustomRecipe(req.user);
   console.log('created recipe in controller: ', recipe);
   res.json(recipe);
 });
@@ -66,7 +68,8 @@ const addItemToRecipe = catchAsync(async (req, res) => {
   const recipe = await recipeService.addIngredient(
     req.body.recipeId,
     req.body.ingredientId,
-    req.body.weight
+    req.body.weight,
+    req.user.email
   );
 
   res.status(httpStatus.CREATED).json(recipe);
@@ -92,7 +95,8 @@ const updateItemInRecipe = catchAsync(async (req, res) => {
   const recipe = await recipeService.updateIngredient(
     req.body.recipeId,
     req.body.ingredientId,
-    req.body.weight
+    req.body.weight,
+    req.user.email
   );
 
   if (req.body.weight) res.status(200).send(recipe);

@@ -8,17 +8,17 @@ const router = express.Router();
 
 router.get("/items", recipeController.getAllItems);
 
-router.get("/", recipeController.getRecipe);
+router.get("/", auth, recipeController.getRecipe);
 
-router.post("/create", recipeController.createRecipe);
+router.post("/create", auth, recipeController.createRecipe);
 
 router.post(
-  "/",
+  "/", auth,
   recipeController.addItemToRecipe
 );
 
 router.put(
-  "/",
+  "/", auth,
   recipeController.updateItemInRecipe
 );
 
