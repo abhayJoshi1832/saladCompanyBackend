@@ -30,6 +30,11 @@ const changeUserAddress = catchAsync(async (req,res) => {
   res.status(200).json({response})
 });
 
+const changeUserDefault = catchAsync(async (req,res) => {
+  const response = await addressService.changeDefault(req.user.email, req.body.index);  
+  res.status(201).json({response})
+});
+
 
 module.exports = {
   createAddressDb,
@@ -37,8 +42,6 @@ module.exports = {
   add,
   deleteUserAddress,
   changeUserAddress,
-
-
-  
+  changeUserDefault  
   
 };

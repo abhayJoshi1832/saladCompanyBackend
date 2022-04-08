@@ -98,6 +98,28 @@ class AddressMethodsClass
         }
     };
 
+    changeDefault = async function(userEmail,index)
+    {
+        try {
+            const userAddressDb = await getAddressesByUser(userEmail);
+            if(index > userAddressDb.addressArr.length) throw new ApiError(400, 'Address index out of range');
+            userAddressDb.primaryAddressIndex = index;
+
+            const res = await userAddressDb.save();         
+            return res;
+
+
+
+        } 
+        catch (error) {
+
+            console.log("error");
+            if (error instanceof ApiError) throw error;
+            throw new ApiError(500, "Error in getting address service, change default method");
+            
+        }
+    }
+
 }
 
 
