@@ -1,13 +1,18 @@
 const express = require("express");
 const validate = require("../../middlewares/validate");
 const auth = require("../../middlewares/auth");
-const scheduleController = require("../../controllers/schedule.controller");
+const addressService = require ("../../services/address.service");
 
 
 
 const router = express.Router();
 
-router.post("/week",auth, scheduleController.createSchedule);
+router.post("/create",auth, async(req,res) =>{
+
+    
+
+});
+
 
 router.get("/month", auth, scheduleController.getSchedule);
 
