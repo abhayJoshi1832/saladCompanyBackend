@@ -6,8 +6,13 @@ const addressService = require("../services/address.service");
 const { crossOriginResourcePolicy } = require("helmet");
 
 const createAddressDb = catchAsync(async (req,res) => {
+
+  //console.log(req.user.email, req.body.address);
+
+
   const response = await addressService.createAddressDB(req.user.email, req.body.address);
   res.status(201).json({response});
+  //res.status(201).json({});
 });
 
 const getAddresses = catchAsync(async (req,res) => {
@@ -21,7 +26,7 @@ const add = catchAsync(async (req,res) => {
 });
 
 const deleteUserAddress = catchAsync(async (req,res) => {
-  const response = await addressService.deleteAddress(req.user.email, req.body.index);
+  const response = await addressService.deleteAddress(req.user.email, req.body.addressId);index
   res.status(200).json({response})
 });
 
@@ -31,7 +36,7 @@ const changeUserAddress = catchAsync(async (req,res) => {
 });
 
 const changeUserDefault = catchAsync(async (req,res) => {
-  const response = await addressService.changeDefault(req.user.email, req.body.index);  
+  const response = await addressService.changeDefault(req.user.email, req.body.addressId);  
   res.status(201).json({response})
 });
 

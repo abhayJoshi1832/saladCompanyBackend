@@ -16,9 +16,9 @@ router.post("/add", auth, addressController.add);
 
 router.delete("/", auth, addressController.deleteUserAddress);
 
-router.post("/edit",auth, addressController.changeUserAddress);
+//router.post("/edit",auth, addressController.changeUserAddress);
 
-router.post("/changedefault", auth, addressController.changeUserDefault);
+router.put("/changedefault", auth, addressController.changeUserDefault);
 
 
 // router.put(
